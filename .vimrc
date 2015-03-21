@@ -60,6 +60,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Note: You don't set neobundle setting in .gvimrc!
 " Original repos on github
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/vimproc.vim', {
 \   'build' : {
 \   'windows' : 'tools\\update-dll-mingw',
@@ -75,6 +76,7 @@ NeoBundle 'plasticboy/vim-markdown' " markdownシンタックス
 NeoBundle 'kannokanno/previm'       " markdownプレビュー
 NeoBundle 'tyru/open-browser.vim'   " ブラウザでファイルを開く
 NeoBundle 'scrooloose/syntastic'    " syntax checker
+NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'itchyny/lightline.vim'   " statusline
 " NeoBundle 'derekwyatt/vim-scala'
 " NeoBundle 'cespare/vim-toml'
@@ -90,6 +92,14 @@ filetype plugin indent on     " Required!
 
 " Installation check.
 NeoBundleCheck
+" }}}
+
+" {{{ unite
+"--------------------------------------------------------------------------------
+nnoremap [unite] <Nop>
+nmap <Space>u [unite]
+nnoremap [unite]c :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
+nnoremap [unite]b :<C-u>Unite buffer<CR>
 " }}}
 
 " {{{ neocomplcache
@@ -197,6 +207,12 @@ autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} setfiletype mkd
 "let g:syntastic_always_populate_loc_list=1
 let g:syntastic_python_checkers = ['flake8']
 autocmd FileType python autocmd BufWritePost <buffer> Errors
+" }}}
+
+" {{{ nerdtree
+"--------------------------------------------------------------------------------
+map <Space>n :NERDTreeToggle<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 " }}}
 
 " {{{ lightline
