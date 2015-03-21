@@ -15,6 +15,7 @@ set autoindent
 set smartindent         " オートインデント
 set expandtab           " タブの代わりに空白文字挿入
 set ts=4 sw=4 sts=0     " タブは半角4文字分のスペース
+au BufNewFile,BufRead *.rb set ts=2 sw=2 sts=0
 set foldmethod=marker
 set laststatus=2        " statuslineを表示
 
