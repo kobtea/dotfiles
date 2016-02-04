@@ -1,3 +1,12 @@
+" {{{ Memo
+" :h[elp] options       => vimの各オプション
+" :helpg[rep] {pattern} => ヘルプファイルを対象にキーワード検索
+" :copen                => quickfixを開く
+" :cclose               => quickfixを閉じる
+" :map                  => 設定されているmappingを表示する
+" }}}
+
+let mapleader = "\<Space>"
 let s:dotfiles_dir = $HOME.'/dotfiles/'
 execute 'source' s:dotfiles_dir.'.vimrc.local'
 
@@ -39,6 +48,7 @@ set smartindent
 " }}}
 " {{{ バッファ
 "--------------------------------------------------------------------------------
+set nobackup                        " バックアップファイル(`*~`)を作成しない
 set clipboard=unnamed,autoselect    " システムのクリップボードと同期する
 set guioptions+=a                   " 上の`autoselect`のGUI VIM版
 set wildignorecase                  " ファイル名やディレクトリを補完するときに大文字と小文字が無視される
@@ -54,14 +64,6 @@ set foldmethod=marker   " marker使ってfoldする
 set expandtab           " タブの代わりに空白文字挿入
 set ts=4 sw=4 sts=0     " タブは半角4文字分のスペース
 inoremap <S-Tab> <C-d>
-" }}}
-" {{{ 言語別 - Ruby
-"--------------------------------------------------------------------------------
-autocmd BufNewFile,BufRead *.rb set ts=2 sw=2 sts=0
-" }}}
-" {{{ 言語別 - Markdown
-"--------------------------------------------------------------------------------
-autocmd BufRead,BufNewFile *.{md,mkd,markdown} setfiletype markdown
 " }}}
 " {{{ Plugins - Build Functions
 "--------------------------------------------------------------------------------
@@ -80,6 +82,11 @@ Plug 'itchyny/lightline.vim'                                " statusline
 Plug 'Shougo/vimproc.vim', {'do': function('BuildVimproc')}
 Plug 'Shougo/vimshell'
 Plug 'xolox/vim-misc' | Plug 'xolox/vim-notes'              " メモ取り
+Plug 'Shougo/neocomplete.vim'                               " 入力補完
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/neomru.vim'
+Plug 'Shougo/unite-outline'                                 " Unite - outline表示
+Plug 'ctrlpvim/ctrlp.vim'
 call plug#end()
 " }}}
 " {{{ lightline
@@ -91,8 +98,77 @@ let g:lightline = {
 " {{{ vim-notes
 "--------------------------------------------------------------------------------
 let g:notes_suffix = '.markdown'
+let g:notes_unicode_enabled = 0
 " }}}
-
+" {{{ unite
+"--------------------------------------------------------------------------------
+" MEMO:
+" - :Unite [source,...]
+" - soureに対して<TAB>するとactionが色々出る (:h unite-actions)
+nnoremap [unite] <Nop>
+nmap <Leader>u [unite]
+call unite#custom#profile('default', 'context', {
+\   'start_insert': 1,
+\   'winheight': 10,
+\   'direction': 'botright',
+\   'ignorecase': 1,
+\   'smartcase': 1
+\ })
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+" Using ag as recursive command.
+if executable('ag')
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts = '-i --vimgrep --hidden'
+    let g:unite_source_grep_recursive_opt = ''
+    let g:unite_source_rec_async_command = ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', '']
+endif
+nnoremap [unite]b :<C-u>Unite buffer<CR>
+nnoremap [unite]f :<C-u>Unite file<CR>
+nnoremap [unite]g :<C-u>Unite grep:.<CR>
+nnoremap [unite]u :<C-u>Unite -auto-preview buffer file_mru file_rec/async:!:fnameescape(expand('%:p:h'))<CR>
+" nnoremap [unite]c :<C-u>UniteWithCurrentDir -buffer-name=files buffer bookmark file<CR>
+" }}}
+" {{{ unite-outline
+"--------------------------------------------------------------------------------
+nnoremap [unite]o :<C-u>Unite -vertical -no-quit -winwidth=40 outline<CR>
+" }}}
+" {{{ ctrlp
+"--------------------------------------------------------------------------------
+let g:ctrlp_cmd = 'CtrlPMRUFiles'
+if executable('ag')
+    let g:ctrlp_user_command = 'ag %s'
+endif
+let g:ctrlp_prompt_mappings = {
+\   'PrtSelectMove("j")':   ['<c-n>', '<down>'],
+\   'PrtSelectMove("k")':   ['<c-p>', '<up>'],
+\   'PrtHistory(-1)':       ['<c-j>'],
+\   'PrtHistory(1)':        ['<c-k>'],
+\   }
+" }}}
+" {{{ neocomplete
+"--------------------------------------------------------------------------------
+let g:neocomplete#enable_at_startup = 1 " 起動時に有効化
+let g:neocomplete#enable_smart_case = 1 " 大文字小文字を区別しない
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+    return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+endfunction
+" <TAB>: completon
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+" }}}
+" {{{ 言語別 - Ruby
+"--------------------------------------------------------------------------------
+autocmd BufNewFile,BufRead *.rb set ts=2 sw=2 sts=0
+" }}}
+" {{{ 言語別 - Markdown
+"--------------------------------------------------------------------------------
+autocmd BufRead,BufNewFile *.{md,mkd,markdown} setfiletype markdown
+" }}}
+" {{{ 言語別 - HTML
+"--------------------------------------------------------------------------------
+autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
+" }}}
 
 " ================================================================================
 " ================================================================================
@@ -115,9 +191,6 @@ let g:notes_suffix = '.markdown'
 " "
 " " Note: You don't set neobundle setting in .gvimrc!
 " " Original repos on github
-" NeoBundle 'Shougo/unite.vim'
-" NeoBundle 'Shougo/neomru.vim'
-" NeoBundle 'Shougo/neocomplcache.vim'
 " NeoBundle 'plasticboy/vim-markdown' " markdownシンタックス
 " NeoBundle 'kannokanno/previm'       " markdownプレビュー
 " NeoBundle 'tyru/open-browser.vim'   " ブラウザでファイルを開く
@@ -132,8 +205,6 @@ let g:notes_suffix = '.markdown'
 " NeoBundle 'taglist.vim'
 " NeoBundle 'aklt/plantuml-syntax'
 " NeoBundle 'kchmck/vim-coffee-script'
-" NeoBundle 'xolox/vim-misc'
-" NeoBundle 'xolox/vim-notes'
 " NeoBundle 'elzr/vim-json'
 " " NeoBundle 'derekwyatt/vim-scala'
 " " NeoBundle 'cespare/vim-toml'
@@ -150,121 +221,6 @@ let g:notes_suffix = '.markdown'
 " " " Installation check.
 " " NeoBundleCheck
 " " " }}}
-" " 
-" " " {{{ unite
-" " "--------------------------------------------------------------------------------
-" " nnoremap [unite] <Nop>
-" " nmap <Space>u [unite]
-" " nnoremap [unite]c :<C-u>UniteWithCurrentDir -buffer-name=files buffer file_mru bookmark file<CR>
-" " nnoremap [unite]b :<C-u>Unite buffer<CR>
-" " " }}}
-" " 
-" " " {{{ neocomplcache
-" " "--------------------------------------------------------------------------------
-" " "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" " " Disable AutoComplPop.
-" " let g:acp_enableAtStartup = 0
-" " " Use neocomplcache.
-" " let g:neocomplcache_enable_at_startup = 1
-" " " Use smartcase.
-" " let g:neocomplcache_enable_smart_case = 1
-" " " Set minimum syntax keyword length.
-" " let g:neocomplcache_min_syntax_length = 3
-" " let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-" " 
-" " " Enable heavy features.
-" " " Use camel case completion.
-" " "let g:neocomplcache_enable_camel_case_completion = 1
-" " " Use underbar completion.
-" " "let g:neocomplcache_enable_underbar_completion = 1
-" " 
-" " " Define dictionary.
-" " let g:neocomplcache_dictionary_filetype_lists = {
-" "     \ 'default' : '',
-" "     \ 'vimshell' : $HOME.'/.vimshell_hist',
-" "     \ 'scheme' : $HOME.'/.gosh_completions'
-" "         \ }
-" " 
-" " " Define keyword.
-" " if !exists('g:neocomplcache_keyword_patterns')
-" "     let g:neocomplcache_keyword_patterns = {}
-" " endif
-" " let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-" " 
-" " " Plugin key-mappings.
-" " inoremap <expr><C-g>     neocomplcache#undo_completion()
-" " inoremap <expr><C-l>     neocomplcache#complete_common_string()
-" " 
-" " " Recommended key-mappings.
-" " " <CR>: close popup and save indent.
-" " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-" " function! s:my_cr_function()
-" "   return neocomplcache#smart_close_popup() . "\<CR>"
-" "   " For no inserting <CR> key.
-" "   "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-" " endfunction
-" " " <TAB>: completion.
-" " inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" " " <C-h>, <BS>: close popup and delete backword char.
-" " inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-" " inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-" " inoremap <expr><C-y>  neocomplcache#close_popup()
-" " inoremap <expr><C-e>  neocomplcache#cancel_popup()
-" " " Close popup by <Space>.
-" " "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
-" " 
-" " " my mapping # begin
-" " imap <C-k> <Plug>(neocomplcache_snippets_expand)
-" " smap <C-k> <Plug>(neocomplcache_snippets_expand)
-" " inoremap <expr><C-g> neocomplcache#undo_completion()
-" " inoremap <expr><C-l> neocomplcache#complete_common_string()
-" " inoremap <expr><CR> neocomplcache#smart_close_popup(). "\<CR>"
-" " inoremap <expr><TAB> pumvisible() ?"\<C-n>" : "\<TAB>"
-" " inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-" " inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-" " inoremap <expr><C-y> neocomplcache#close_popup()
-" " inoremap <expr><C-e> neocomplcache#cancel_popup()
-" " " my mapping # end
-" " 
-" " " For cursor moving in insert mode(Not recommended)
-" " "inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
-" " "inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
-" " "inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
-" " "inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
-" " " Or set this.
-" " "let g:neocomplcache_enable_cursor_hold_i = 1
-" " " Or set this.
-" " "let g:neocomplcache_enable_insert_char_pre = 1
-" " 
-" " " AutoComplPop like behavior.
-" " "let g:neocomplcache_enable_auto_select = 1
-" " 
-" " " Shell like behavior(not recommended).
-" " "set completeopt+=longest
-" " "let g:neocomplcache_enable_auto_select = 1
-" " "let g:neocomplcache_disable_auto_complete = 1
-" " "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-" " 
-" " " Enable omni completion.
-" " autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-" " autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-" " autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-" " autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-" " autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-" " 
-" " " Enable heavy omni completion.
-" " if !exists('g:neocomplcache_omni_patterns')
-" "   let g:neocomplcache_omni_patterns = {}
-" " endif
-" " let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-" " let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-" " let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-" " 
-" " " For perlomni.vim setting.
-" " " https://github.com/c9s/perlomni.vim
-" " let g:neocomplcache_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-" " " }}}
-" " 
 " " " {{{ previm
 " " "--------------------------------------------------------------------------------
 " " "g:previm_open_cmd   " open-browser使用時は不要
@@ -315,9 +271,3 @@ let g:notes_suffix = '.markdown'
 " " let g:syntastic_python_checkers = ['flake8']
 " " "let g:syntastic_python_flake8_args = '--ignore="E221,E303,E501"'
 " " autocmd FileType python autocmd BufWritePost <buffer> Errors
-" " 
-" " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" " " plantuml-syntax
-" " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" " let g:plantuml_executable_script = '/usr/local/bin/plantuml'
-" " 
