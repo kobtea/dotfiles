@@ -51,7 +51,6 @@ set smartindent
 set nobackup                        " バックアップファイル(`*~`)を作成しない
 set clipboard=unnamed,autoselect    " システムのクリップボードと同期する
 set guioptions+=a                   " 上の`autoselect`のGUI VIM版
-set wildignorecase                  " ファイル名やディレクトリを補完するときに大文字と小文字が無視される
 set wildmode=list:full              " 複数のマッチがあるときは、全てのマッチを羅列し、最初のマッチを補完
 " au BufEnter * execute ":lcd" .expand("%:p:h") " カレントバッファのパスに移動するする
 " }}}
@@ -87,6 +86,8 @@ Plug 'Shougo/unite.vim'
 Plug 'Shougo/neomru.vim'
 Plug 'Shougo/unite-outline'                                 " Unite - outline表示
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/syntastic'                                 " syntax checker
+Plug 'elzr/vim-json'
 call plug#end()
 " }}}
 " {{{ lightline
@@ -130,7 +131,7 @@ nnoremap [unite]u :<C-u>Unite -auto-preview buffer file_mru file_rec/async:!:fna
 " }}}
 " {{{ unite-outline
 "--------------------------------------------------------------------------------
-nnoremap [unite]o :<C-u>Unite -vertical -no-quit -winwidth=40 outline<CR>
+nnoremap [unite]o :<C-u>Unite -vertical -no-quit -no-start-insert -winwidth=40 outline<CR>
 " }}}
 " {{{ ctrlp
 "--------------------------------------------------------------------------------
@@ -157,6 +158,21 @@ endfunction
 " <TAB>: completon
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 " }}}
+" {{{ syntastic
+"--------------------------------------------------------------------------------
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+" }}}
+" {{{ 言語別 - Python
+"--------------------------------------------------------------------------------
+let g:syntastic_python_checkers = ['flake8']
+autocmd FileType python autocmd BufWritePost <buffer> Errors
+" }}}
 " {{{ 言語別 - Ruby
 "--------------------------------------------------------------------------------
 autocmd BufNewFile,BufRead *.rb set ts=2 sw=2 sts=0
@@ -169,105 +185,3 @@ autocmd BufRead,BufNewFile *.{md,mkd,markdown} setfiletype markdown
 "--------------------------------------------------------------------------------
 autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
 " }}}
-
-" ================================================================================
-" ================================================================================
-" ================================================================================
-" ================================================================================
-" ================================================================================
-" " {{{ NeoBundle
-" "--------------------------------------------------------------------------------
-" if has('vim_starting')
-"     set runtimepath+=~/.vim/bundle/neobundle.vim/
-" endif
-" 
-" " Required:
-" call neobundle#begin(expand('~/.vim/bundle/'))
-" 
-" " Let NeoBundle manage NeoBundle
-" NeoBundleFetch 'Shougo/neobundle.vim'
-" 
-" " My Bundles here:
-" "
-" " Note: You don't set neobundle setting in .gvimrc!
-" " Original repos on github
-" NeoBundle 'plasticboy/vim-markdown' " markdownシンタックス
-" NeoBundle 'kannokanno/previm'       " markdownプレビュー
-" NeoBundle 'tyru/open-browser.vim'   " ブラウザでファイルを開く
-" NeoBundle 'scrooloose/syntastic'    " syntax checker
-" NeoBundle 'scrooloose/nerdtree'
-" NeoBundle 'majutsushi/tagbar'
-" NeoBundle 'szw/vim-tags'
-" NeoBundle 'vim-scripts/Source-Explorer-srcexpl.vim'
-" NeoBundle 'vim-scripts/SrcExpl'
-" NeoBundle 'wesleyche/Trinity'
-" NeoBundle 'The-NERD-tree'
-" NeoBundle 'taglist.vim'
-" NeoBundle 'aklt/plantuml-syntax'
-" NeoBundle 'kchmck/vim-coffee-script'
-" NeoBundle 'elzr/vim-json'
-" " NeoBundle 'derekwyatt/vim-scala'
-" " NeoBundle 'cespare/vim-toml'
-" 
-" " Required:
-" call neobundle#end()
-" " 
-" " filetype plugin indent on     " Required!
-" " " Brief help
-" " " :NeoBundleList          - list configured bundles
-" " " :NeoBundleInstall(!)    - install(update) bundles
-" " " :NeoBundleClean(!)      - confirm(or auto-approve) removal of unused bundles
-" " 
-" " " Installation check.
-" " NeoBundleCheck
-" " " }}}
-" " " {{{ previm
-" " "--------------------------------------------------------------------------------
-" " "g:previm_open_cmd   " open-browser使用時は不要
-" " autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} setfiletype mkd
-" " " }}}
-" " 
-" " " {{{ syntastic
-" " "--------------------------------------------------------------------------------
-" " "let g:syntastic_check_on_open=1
-" " "let g:syntastic_always_populate_loc_list=1
-" " let g:syntastic_python_checkers = ['flake8']
-" " autocmd FileType python autocmd BufWritePost <buffer> Errors
-" " " }}}
-" " 
-" " " {{{ nerdtree
-" " "--------------------------------------------------------------------------------
-" " map <Space>n :NERDTreeToggle<CR>
-" " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-" " " }}}
-" " 
-" " " {{{ Tagbar
-" " "--------------------------------------------------------------------------------
-" " nmap <Leader>t :TagbarToggle<CR>
-" " " }}}
-" " 
-" " " {{{ MISC
-" " "--------------------------------------------------------------------------------
-" " " previm
-" " let g:previm_open_cmd = 'open -a Firefox'
-" " " }}}
-" " 
-" " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" " " vim-tags
-" " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" " let g:vim_tags_project_tags_command = '/usr/local/bin/ctags -R {OPTIONS} {DIRECTORY} 2> /dev/null'
-" " let g:vim_tags_gems_tags_command = '/usr/local/bin/ctags -R {OPTIONS} `bundle show --paths` 2> /dev/null'
-" " 
-" " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" " " taglist
-" " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" " let Tlist_Ctags_Cmd = '"/usr/local/bin/ctags"'
-" " 
-" " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" " " Syntastic
-" " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" " let g:syntastic_check_on_open=1
-" " let g:syntastic_always_populate_loc_list=1
-" " let g:syntastic_python_checkers = ['flake8']
-" " "let g:syntastic_python_flake8_args = '--ignore="E221,E303,E501"'
-" " autocmd FileType python autocmd BufWritePost <buffer> Errors
