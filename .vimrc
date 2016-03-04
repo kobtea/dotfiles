@@ -174,6 +174,19 @@ let g:syntastic_mode_map = {
     \ }
 autocmd BufWrite * SyntasticCheck
 " }}}
+" {{{ gnu global
+"--------------------------------------------------------------------------------
+" Mac OSX
+"   $ mkdir -p $HOME/.vim/plugin
+"   $ ln -s /usr/local/Cellar/global/6.5.2/share/gtags/gtags.vim $HOME/.vim/plugin/
+nnoremap [global] <Nop>
+nmap <C-g> [global]
+nnoremap [global]g :<C-u>Gtags<CR>
+nnoremap [global]l :<C-u>Gtags -f %<CR>
+nnoremap [global]] :<C-u>GtagsCursor<CR>
+nnoremap [global]n :<C-u>cn<CR>
+nnoremap [global]p :<C-u>cp<CR>
+" }}}
 " {{{ 言語別 - Python
 "--------------------------------------------------------------------------------
 let g:syntastic_python_checkers = ['flake8']
