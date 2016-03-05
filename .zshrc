@@ -1,3 +1,10 @@
+# {{{ Plugin
+# ------------------------------------------------------------------------------
+source $HOME/.zplug/zplug
+zplug "zsh-users/zsh-completions", of:src
+zplug "sindresorhus/pure" | zplug "mafredri/zsh-async"
+zplug load
+# }}}
 # {{{ Completion
 # ------------------------------------------------------------------------------
 autoload -U compinit
@@ -35,23 +42,23 @@ setopt AUTO_PUSHD # `cd -[TAB]`で移動したことのあるディレクトリ�
 # }}}
 # {{{ Prompt
 # ------------------------------------------------------------------------------
-case ${UID} in
-    0)
-        PROMPT="%B%{[31m%}%/#%{[m%}%b"
-	    #PROMPT2="%B%{[31m%}%_#%{[m%}%b"
-	    #SPROMPT="%B%{[31m%}%r is correct? [n,y,a,e]:%{m%}%b"
-	    #[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        #    PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
-	    ;;
-    *)
-	    PROMPT="%B%{[31m%}%m:%n%%%{[m%} "
-	    RPROMPT="%B[%{[35m%}%~%{[m%}]"
-	    PROMPT2="%B%{[31m%}%_%%%{[m%} "
-	    SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
-	    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-            PROMPT="%{[37m%}${HOST%%.*} ${PROMPT} "
-	    ;;
-esac
+# case ${UID} in
+#     0)
+#         PROMPT="%B%{[31m%}%/#%{[m%}%b"
+# 	    #PROMPT2="%B%{[31m%}%_#%{[m%}%b"
+# 	    #SPROMPT="%B%{[31m%}%r is correct? [n,y,a,e]:%{m%}%b"
+# 	    #[ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+#         #    PROMPT="%{[37m%}${HOST%%.*} ${PROMPT}"
+# 	    ;;
+#     *)
+# 	    PROMPT="%B%{[31m%}%m:%n%%%{[m%} "
+# 	    RPROMPT="%B[%{[35m%}%~%{[m%}]"
+# 	    PROMPT2="%B%{[31m%}%_%%%{[m%} "
+# 	    SPROMPT="%{[31m%}%r is correct? [n,y,a,e]:%{[m%} "
+# 	    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
+#             PROMPT="%{[37m%}${HOST%%.*} ${PROMPT} "
+# 	    ;;
+# esac
 # }}}
 # {{{ Terminal
 # ------------------------------------------------------------------------------
