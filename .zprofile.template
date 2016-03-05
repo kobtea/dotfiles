@@ -53,3 +53,9 @@ export PATH=$PATH:$GOPATH/bin
 # docker
 eval "$(docker-machine env default)"
 # }}}
+# {{{ Other
+# ------------------------------------------------------------------------------
+# fzf
+source "/usr/local/opt/fzf/shell/completion.zsh" # `fzf [/PATH/TO]**[TAB]`がすごい
+source "/usr/local/opt/fzf/shell/key-bindings.zsh" # <C-r>を置き換える
+# }}}

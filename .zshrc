@@ -87,6 +87,7 @@ alias gb='git branch'
 alias gl='git log'
 alias gd='git diff'
 alias ga='git add'
+alias diff='colordiff -uprN'
 alias tmux='TERM=screen-256color-bce tmux'
 # }}}
 # {{{ Hook Function
