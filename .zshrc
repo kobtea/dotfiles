@@ -1,7 +1,7 @@
 # {{{ Completion
 # ------------------------------------------------------------------------------
 autoload -U compinit
-compinit
+compinit -C
 setopt COMPLETE_ALIASES # エイリアスに対しても補完を効かせる
 setopt LIST_PACKED # 補完リストを詰めて表示
 # }}}
