@@ -1,0 +1,12 @@
+# {{{ Web Service
+# ------------------------------------------------------------------------------
+# Google Cloud Platform
+source "$HOME/google-cloud-sdk/path.zsh.inc"
+source "$HOME/google-cloud-sdk/completion.zsh.inc"
+# }}}
+# {{{ DEBUG: Profile End
+# ------------------------------------------------------------------------------
+#if type zprof > /dev/null 2>&1; then
+#    zprof | cat
+#fi
+# }}}
