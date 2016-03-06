@@ -1,10 +1,3 @@
-# {{{ Plugin
-# ------------------------------------------------------------------------------
-source $HOME/.zplug/zplug
-zplug "zsh-users/zsh-completions", of:src
-zplug "sindresorhus/pure" | zplug "mafredri/zsh-async"
-zplug load
-# }}}
 # {{{ Completion
 # ------------------------------------------------------------------------------
 autoload -U compinit
@@ -93,4 +86,11 @@ alias tmux='TERM=screen-256color-bce tmux'
 # {{{ Hook Function
 # ------------------------------------------------------------------------------
 function chpwd() {ls} # 移動時にls
+# }}}
+# {{{ Plugin
+# ------------------------------------------------------------------------------
+source $HOME/.zplug/zplug
+zplug "zsh-users/zsh-completions", of:src
+zplug "sindresorhus/pure" | zplug "mafredri/zsh-async"
+zplug load
 # }}}
