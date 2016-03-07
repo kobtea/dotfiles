@@ -205,3 +205,7 @@ autocmd BufRead,BufNewFile *.{md,mkd,markdown} setfiletype markdown
 "--------------------------------------------------------------------------------
 autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
 " }}}
+" {{{ 言語別 - YAML
+"--------------------------------------------------------------------------------
+autocmd BufNewFile,BufRead *.{yml,yaml} set ts=2 sw=2 sts=0
+" }}}
