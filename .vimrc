@@ -30,6 +30,7 @@ set laststatus=2                    " statuslineを常に表示
 "     autocmd WinEnter,BufRead * set cursorline
 " augroup END
 set visualbell t_vb=                " ビープ音もフラッシュもしない
+set background=dark                 " 背景色を指定しておくとhighlightの色などよしなにしてくれる
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif    " ファイルを開いた時に、前回終了時の行で起動する
 " }}}
 " {{{ 検索
@@ -88,6 +89,7 @@ Plug 'Shougo/unite-outline'                                 " Unite - outline表
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/syntastic'                                 " syntax checker
 Plug 'elzr/vim-json'
+Plug 'scrooloose/nerdtree'
 call plug#end()
 " }}}
 " {{{ lightline
@@ -193,9 +195,11 @@ nnoremap [global]p :<C-u>cp<CR>
 let g:syntastic_python_checkers = ['flake8']
 autocmd FileType python autocmd BufWritePost <buffer> Errors
 " }}}
-" {{{ 言語別 - Ruby
+" {{{ 言語別 - Ruby, YAML
 "--------------------------------------------------------------------------------
-autocmd BufNewFile,BufRead *.rb set ts=2 sw=2 sts=0
+let g:syntastic_ruby_checkers = ['rubocop']
+let g:syntastic_ruby_rubocop_args = "--except LineLength"
+autocmd BufNewFile,BufRead *.{rb,rake,yaml,yml} set ts=2 sw=2 sts=0
 " }}}
 " {{{ 言語別 - Markdown
 "--------------------------------------------------------------------------------
@@ -204,8 +208,4 @@ autocmd BufRead,BufNewFile *.{md,mkd,markdown} setfiletype markdown
 " {{{ 言語別 - HTML
 "--------------------------------------------------------------------------------
 autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
-" }}}
-" {{{ 言語別 - YAML
-"--------------------------------------------------------------------------------
-autocmd BufNewFile,BufRead *.{yml,yaml} set ts=2 sw=2 sts=0
 " }}}
