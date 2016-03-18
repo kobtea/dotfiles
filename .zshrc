@@ -52,6 +52,19 @@ setopt AUTO_PUSHD # `cd -[TAB]`で移動したことのあるディレクトリ�
 #             PROMPT="%{[37m%}${HOST%%.*} ${PROMPT} "
 # 	    ;;
 # esac
+# case ${UID} in
+#     0)
+#     PROMPT="%B%{[31m%}%/#%{[m%}%b"
+#     PROMPT2="%B%{[31m%}%_#%{[m%}%b"
+#     ;;
+#     *)
+#     PROMPT="%B%{[31m%}macbook $%{[m%} "
+#     RPROMPT="%B[%{[35m%}%~%{[m%}]"
+#     ;;
+# esac
+autoload -U promptinit
+promptinit
+PURE_PROMPT_SYMBOL='$'
 # }}}
 # {{{ Terminal
 # ------------------------------------------------------------------------------
@@ -68,18 +81,24 @@ esac
 # ------------------------------------------------------------------------------
 case ${OSTYPE} in
     darwin*)
-        alias vi='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@"'
+        alias vi='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@" -u NONE --noplugin'
         alias vim='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@"'
         alias view='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/View "$@"'
+        alias grep='ggrep'
+        alias egrep='gegrep'
         ;;
 esac
 alias ls='ls -G'
 alias ll='ls -laG'
+alias g='git'
 alias gs='git status'
 alias gb='git branch'
 alias gl='git log'
 alias gd='git diff'
 alias ga='git add'
+alias v='vagrant'
+alias be='bundle exec'
+alias ce='chef exec'
 alias diff='colordiff -uprN'
 alias tmux='TERM=screen-256color-bce tmux'
 # }}}
