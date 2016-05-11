@@ -1,7 +1,7 @@
 # {{{ Completion
 # ------------------------------------------------------------------------------
 autoload -U compinit
-compinit -C
+compinit #-C
 setopt COMPLETE_ALIASES # エイリアスに対しても補完を効かせる
 setopt LIST_PACKED # 補完リストを詰めて表示
 # }}}
@@ -86,6 +86,7 @@ case ${OSTYPE} in
         alias view='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/View "$@"'
         alias grep='ggrep'
         alias egrep='gegrep'
+        alias sed='gsed'
         ;;
 esac
 alias ls='ls -G'
@@ -109,7 +110,8 @@ function chpwd() {ls} # 移動時にls
 # {{{ Plugin
 # ------------------------------------------------------------------------------
 source $HOME/.zplug/zplug
-zplug "zsh-users/zsh-completions", of:src
-zplug "sindresorhus/pure" | zplug "mafredri/zsh-async"
+zplug "zsh-users/zsh-completions", use:src
+zplug "mafredri/zsh-async", on:"sindresorhus/pure"
+zplug "sindresorhus/pure"
 zplug load
 # }}}
