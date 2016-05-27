@@ -50,6 +50,7 @@ set smartindent
 " {{{ バッファ
 "--------------------------------------------------------------------------------
 set nobackup                        " バックアップファイル(`*~`)を作成しない
+set noundofile                      " undoファイル(`.*.un~`)を作成しない
 set clipboard=unnamed,autoselect    " システムのクリップボードと同期する
 set guioptions+=a                   " 上の`autoselect`のGUI VIM版
 set wildmode=list:full              " 複数のマッチがあるときは、全てのマッチを羅列し、最初のマッチを補完
@@ -90,6 +91,7 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/syntastic'                                 " syntax checker
 Plug 'elzr/vim-json'
 Plug 'scrooloose/nerdtree'
+Plug 'aklt/plantuml-syntax'
 call plug#end()
 " }}}
 " {{{ lightline
@@ -101,6 +103,7 @@ let g:lightline = {
 " {{{ vim-notes
 "--------------------------------------------------------------------------------
 let g:notes_suffix = '.markdown'
+let g:notes_tab_indents = 0
 let g:notes_unicode_enabled = 0
 let g:notes_list_bullets = ['-']
 " }}}
