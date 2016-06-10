@@ -82,8 +82,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'itchyny/lightline.vim'                                " statusline
 Plug 'Shougo/vimproc.vim', {'do': function('BuildVimproc')}
 Plug 'Shougo/vimshell'
-Plug 'xolox/vim-misc' | Plug 'xolox/vim-notes'              " メモ取り
-Plug 'Shougo/neocomplete.vim'                               " 入力補完
+" Plug 'xolox/vim-misc' | Plug 'xolox/vim-notes'              " メモ取り
+Plug 'Konfekt/FastFold' | Plug 'Shougo/neocomplete.vim'     " 入力補完
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/neomru.vim'
 Plug 'Shougo/unite-outline'                                 " Unite - outline表示
@@ -92,6 +92,9 @@ Plug 'scrooloose/syntastic'                                 " syntax checker
 Plug 'elzr/vim-json'
 Plug 'scrooloose/nerdtree'
 Plug 'aklt/plantuml-syntax'
+Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown'
+Plug 'Shougo/junkfile.vim'
+Plug 'glidenote/memolist.vim'
 call plug#end()
 " }}}
 " {{{ lightline
@@ -102,10 +105,10 @@ let g:lightline = {
 " }}}
 " {{{ vim-notes
 "--------------------------------------------------------------------------------
-let g:notes_suffix = '.markdown'
-let g:notes_tab_indents = 0
-let g:notes_unicode_enabled = 0
-let g:notes_list_bullets = ['-']
+" let g:notes_suffix = '.markdown'
+" let g:notes_tab_indents = 0
+" let g:notes_unicode_enabled = 0
+" let g:notes_list_bullets = ['-']
 " }}}
 " {{{ unite
 "--------------------------------------------------------------------------------
@@ -138,6 +141,21 @@ nnoremap [unite]u :<C-u>Unite -auto-preview buffer file_mru file_rec/async:!:fna
 " {{{ unite-outline
 "--------------------------------------------------------------------------------
 nnoremap [unite]o :<C-u>Unite -vertical -no-quit -no-start-insert -winwidth=40 outline<CR>
+" }}}
+" {{{ unite for junkfile
+"--------------------------------------------------------------------------------
+nnoremap [unite]j   :<C-u>Unite junkfile<CR>
+nnoremap [unite]je  :<C-u>Unite junkfile/new<CR>
+" }}}
+" {{{ memolist
+"--------------------------------------------------------------------------------
+let g:memolist_unite = 1
+let g:memolist_unite_source = "file_rec"
+let g:memolist_unite_option = "-auto-preview -start-insert"
+let g:memolist_ex_cmd = 'CtrlP'
+nnoremap [unite]mn : MemoNew<CR>
+nnoremap [unite]ml : MemoList<CR>
+nnoremap [unite]mg : MemoGrep<CR>
 " }}}
 " {{{ ctrlp
 "--------------------------------------------------------------------------------
@@ -207,6 +225,7 @@ autocmd BufNewFile,BufRead *.{rb,rake,yaml,yml} set ts=2 sw=2 sts=0
 " {{{ 言語別 - Markdown
 "--------------------------------------------------------------------------------
 autocmd BufRead,BufNewFile *.{md,mkd,markdown} setfiletype markdown
+let g:vim_markdown_folding_style_pythonic = 1
 " }}}
 " {{{ 言語別 - HTML
 "--------------------------------------------------------------------------------
