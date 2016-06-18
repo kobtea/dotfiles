@@ -224,7 +224,16 @@ autocmd BufNewFile,BufRead *.{rb,rake,yaml,yml} set ts=2 sw=2 sts=0
 " }}}
 " {{{ 言語別 - Markdown
 "--------------------------------------------------------------------------------
-autocmd BufRead,BufNewFile *.{md,mkd,markdown} setfiletype markdown
+autocmd BufRead,BufNewFile *.{md,mkd,markdown} call SetMarkdownOptions()
+function SetMarkdownOptions()
+    setfiletype markdown
+    syntax match MdTaskOpen /-*\s\[\s*\]\s.\+/ display containedin=ALL
+    syntax match MdTaskWip  /-*\s\[WIP\]\s.\+/ display containedin=ALL
+    syntax match MdTaskDone /-*\s\[DONE\]\s.\+/ display containedin=ALL
+    highlight MdTaskOpen ctermfg=darkgreen
+    highlight MdTaskWip ctermfg=magenta
+    " highlight MdTaskDone ctermfg=blue
+endfunction
 let g:vim_markdown_folding_style_pythonic = 1
 " }}}
 " {{{ 言語別 - HTML
