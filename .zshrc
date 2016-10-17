@@ -1,3 +1,4 @@
+source $HOME/dotfiles/.zprofile
 # {{{ Completion
 # ------------------------------------------------------------------------------
 autoload -U compinit
@@ -18,6 +19,8 @@ HISTFILE=$HOME/.zsh_history
 HISTSIZE=50000
 SAVEHIST=50000
 setopt HIST_IGNORE_DUPS # 既にhistoryに登録されていたら追記しない
+setopt HIST_IGNORE_ALL_DUPS # 既にhistoryに登録されていたら古い方を削除する
+setopt HIST_REDUCE_BLANKS # 余計な余白を削除する
 # }}}
 # {{{ Search
 # ------------------------------------------------------------------------------
@@ -102,6 +105,7 @@ alias be='bundle exec'
 alias ce='chef exec'
 alias diff='colordiff -uprN'
 alias tmux='TERM=screen-256color-bce tmux'
+alias emacs='emacs -nw'
 # }}}
 # {{{ Hook Function
 # ------------------------------------------------------------------------------
@@ -109,9 +113,11 @@ function chpwd() {ls} # 移動時にls
 # }}}
 # {{{ Plugin
 # ------------------------------------------------------------------------------
-source $HOME/.zplug/zplug
+source $HOME/.zplug/init.zsh
 zplug "zsh-users/zsh-completions", use:src
 zplug "mafredri/zsh-async", on:"sindresorhus/pure"
 zplug "sindresorhus/pure"
+zplug "zsh-users/zsh-autosuggestions"
 zplug load
 # }}}
+source $HOME/dotfiles/.zlogin
