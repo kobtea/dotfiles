@@ -259,6 +259,70 @@ you should place your code here."
         (quote ((sequence "TODO(t)" "WIP(w)" "PEND(p)" "|" "DONE(d)" "SOMEDAY(s)")))
   )
   (setq org-log-done 'time)
+
+  ;; https://epsilonclue.wordpress.com/2010/06/03/monthly-reports-with-org-mode/
+  ; Make it easier to generate bullets for $BOSS
+  (defvar bullet-entry-types
+    '(:closed)
+    "Org-mode agenda types that we want to see in the monthly bullet report See `org-agenda-entry-types'."
+    )
+
+  (defun bullets ()
+    "Show a list of achievements for the past month, for monthly reports. Uses `org-agenda'. "
+    (interactive)
+    (require 'org-agenda)
+                                        ; All we're doing here, really, is calling `org-agenda' with
+                                        ; arguments giving a start date and a number of days. But to do
+                                        ; that, we need to figure out
+                                        ; - the date of the first of last month
+                                        ; - the number of days in last month
+    (let* ((now (current-time))
+                                        ; Figure out when last month was. Assuming that I run this
+                                        ; close to the beginning of a month, then `now' minus two
+                                        ; weeks was some time in the previous month. We can use that
+                                        ; to extract the year and month that we're interested in.
+           (2weeks-ago
+            (time-subtract now
+                           (days-to-time 14)))
+                                        ; We'll also need to know when the first of this month was,
+                                        ; to find out how long last month was. If today is the 12th
+                                        ; of the month, then the first of the month was `now' minus
+                                        ; 11 days.
+           (1st-of-this-month
+            (time-subtract now
+                           (days-to-time
+                            (- (nth 3 (decode-time now))
+                               1))))
+                                        ; Ditto to find the first of last month.
+           (1st-of-last-month
+            (time-subtract 2weeks-ago
+                           (days-to-time
+                            (- (nth 3 (decode-time 2weeks-ago))
+                               1))))
+                                        ; The length of last month is the difference (in days)
+                                        ; between the first of last month, and the first of this
+                                        ; month.
+           (len-last-month
+            (time-to-number-of-days
+             (time-subtract 1st-of-this-month
+                            1st-of-last-month)))
+           (start-date (decode-time 1st-of-last-month))
+           (start-year (nth 5 start-date))	; Year number
+           (start-mon (nth 4 start-date))		; Month number
+                                        ; Restrict the agenda to only those types of entries we're
+                                        ; interested in. I think this takes advantage of dynamic
+                                        ; scoping, which is normally an abomination unto the lord,
+                                        ; but is useful here.
+           (org-agenda-entry-types bullet-entry-types)
+           )
+                                        ; Create an agenda with the stuff we've prepared above
+      (org-agenda-list nil
+                       (format "%04d-%02d-01"
+                               start-year
+                               start-mon)
+                       len-last-month)
+      ))
+
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
