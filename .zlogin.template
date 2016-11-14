@@ -1,5 +1,30 @@
+# {{{ Other
+# ------------------------------------------------------------------------------
+# fzf
+source "/usr/local/opt/fzf/shell/completion.zsh" # `fzf [/PATH/TO]**[TAB]`がすごい
+source "/usr/local/opt/fzf/shell/key-bindings.zsh" # <C-r>を置き換える
+
+# z
+source /usr/local/etc/profile.d/z.sh
+unalias z
+z() {
+  if [[ -z "$*" ]]; then
+    cd "$(_z -l 2>&1 | fzf +s --tac | sed 's/^[0-9,.]* *//')"
+  else
+    _last_z_args="$@"
+    _z "$@"
+  fi
+}
+
+zz() {
+  cd "$(_z -l 2>&1 | sed 's/^[0-9,.]* *//' | fzf -q $_last_z_args)"
+}
+# }}}
 # {{{ Web Service
 # ------------------------------------------------------------------------------
+# AWS
+source /usr/local/share/zsh/site-functions/_aws
+
 # Google Cloud Platform
 source "$HOME/google-cloud-sdk/path.zsh.inc"
 source "$HOME/google-cloud-sdk/completion.zsh.inc"
