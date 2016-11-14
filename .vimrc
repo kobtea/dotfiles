@@ -95,6 +95,7 @@ Plug 'aklt/plantuml-syntax'
 Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown'
 Plug 'Shougo/junkfile.vim'
 Plug 'glidenote/memolist.vim'
+Plug 'fatih/vim-go'
 call plug#end()
 " }}}
 " {{{ lightline
