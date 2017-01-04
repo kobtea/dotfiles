@@ -115,8 +115,8 @@ function chpwd() {ls} # 移動時にls
 # ------------------------------------------------------------------------------
 source $HOME/.zplug/init.zsh
 zplug "zsh-users/zsh-completions", use:src
-zplug "mafredri/zsh-async", on:"sindresorhus/pure"
-zplug "sindresorhus/pure"
+zplug "mafredri/zsh-async", from:github, defer:0
+zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 zplug "zsh-users/zsh-autosuggestions"
 zplug load
 # }}}
