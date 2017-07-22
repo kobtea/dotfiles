@@ -84,10 +84,7 @@ endfunction
 "--------------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
 Plug 'itchyny/lightline.vim'                                " statusline
-Plug 'Shougo/vimproc.vim', {'do': function('BuildVimproc')}
-Plug 'Shougo/vimshell'
 " Plug 'xolox/vim-misc' | Plug 'xolox/vim-notes'              " メモ取り
-Plug 'Konfekt/FastFold' | Plug 'Shougo/neocomplete.vim'     " 入力補完
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neomru.vim'
@@ -101,6 +98,13 @@ Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown'
 Plug 'Shougo/junkfile.vim'
 Plug 'glidenote/memolist.vim'
 Plug 'fatih/vim-go'
+if has("nvim")
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+    Plug 'Shougo/vimproc.vim', {'do': function('BuildVimproc')}
+    Plug 'Shougo/vimshell'
+    Plug 'Konfekt/FastFold' | Plug 'Shougo/neocomplete.vim'     " 入力補完
+endif
 call plug#end()
 " }}}
 " {{{ lightline
@@ -227,15 +231,24 @@ let g:ctrlp_prompt_mappings = {
 " }}}
 " {{{ neocomplete
 "--------------------------------------------------------------------------------
-let g:neocomplete#enable_at_startup = 1 " 起動時に有効化
-let g:neocomplete#enable_smart_case = 1 " 大文字小文字を区別しない
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-    return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-endfunction
-" <TAB>: completon
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+if !has("nvim")
+    let g:neocomplete#enable_at_startup = 1 " 起動時に有効化
+    let g:neocomplete#enable_smart_case = 1 " 大文字小文字を区別しない
+    " <CR>: close popup and save indent.
+    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+    function! s:my_cr_function()
+        return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+    endfunction
+    " <TAB>: completon
+    inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+endif
+" }}}
+" {{{ deoplete
+"--------------------------------------------------------------------------------
+if has("nvim")
+    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#enable_smart_case = 1
+endif
 " }}}
 " {{{ syntastic
 "--------------------------------------------------------------------------------
