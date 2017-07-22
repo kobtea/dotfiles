@@ -51,7 +51,11 @@ set smartindent
 "--------------------------------------------------------------------------------
 set nobackup                        " バックアップファイル(`*~`)を作成しない
 set noundofile                      " undoファイル(`.*.un~`)を作成しない
-set clipboard=unnamed,autoselect    " システムのクリップボードと同期する
+if has("nvim")
+    set clipboard+=unnamedplus
+else
+    set clipboard=unnamed,autoselect    " システムのクリップボードと同期する
+endif
 set guioptions+=a                   " 上の`autoselect`のGUI VIM版
 set wildmode=list:full              " 複数のマッチがあるときは、全てのマッチを羅列し、最初のマッチを補完
 " au BufEnter * execute ":lcd" .expand("%:p:h") " カレントバッファのパスに移動するする
@@ -226,7 +230,7 @@ autocmd BufNewFile,BufRead *.{rb,rake,yaml,yml} set ts=2 sw=2 sts=0
 " {{{ 言語別 - Markdown
 "--------------------------------------------------------------------------------
 autocmd BufRead,BufNewFile *.{md,mkd,markdown} call SetMarkdownOptions()
-function SetMarkdownOptions()
+function! SetMarkdownOptions()
     setfiletype markdown
     syntax match MdTaskOpen /-*\s\[\s*\]\s.\+/ display containedin=ALL
     syntax match MdTaskWip  /-*\s\[WIP\]\s.\+/ display containedin=ALL
