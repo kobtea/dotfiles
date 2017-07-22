@@ -89,6 +89,7 @@ Plug 'Shougo/vimshell'
 " Plug 'xolox/vim-misc' | Plug 'xolox/vim-notes'              " メモ取り
 Plug 'Konfekt/FastFold' | Plug 'Shougo/neocomplete.vim'     " 入力補完
 Plug 'Shougo/unite.vim'
+Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neomru.vim'
 Plug 'Shougo/unite-outline'                                 " Unite - outline表示
 Plug 'ctrlpvim/ctrlp.vim'
@@ -143,24 +144,73 @@ nnoremap [unite]g :<C-u>Unite grep:.<CR>
 nnoremap [unite]u :<C-u>Unite -auto-preview buffer file_mru file_rec/async:!:fnameescape(expand('%:p:h'))<CR>
 " nnoremap [unite]c :<C-u>UniteWithCurrentDir -buffer-name=files buffer bookmark file<CR>
 " }}}
+" {{{ denite
+"--------------------------------------------------------------------------------
+nnoremap [denite] <Nop>
+nmap <Leader>u [denite]
+nnoremap [denite]b :<C-u>Denite buffer<CR>
+nnoremap [denite]f :<C-u>Denite file<CR>
+nnoremap [denite]g :<C-u>Denite grep:.<CR>
+nnoremap [denite]u :<C-u>Denite -auto-preview buffer file_mru file_rec<CR>
+" Change file_rec command.
+call denite#custom#var('file_rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+" Change mappings.
+call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>', 'noremap' )
+call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>', 'noremap' )
+" Change matchers.
+call denite#custom#source('file_mru', 'matchers', ['matcher_fuzzy', 'matcher_project_files'])
+call denite#custom#source('file_rec', 'matchers', ['matcher_cpsm'])
+" Change sorters.
+call denite#custom#source('file_rec', 'sorters', ['sorter_sublime'])
+" Add custom menus
+let s:menus = {}
+let s:menus.zsh = {'description': 'Edit your import zsh configuration'}
+let s:menus.zsh.file_candidates = [
+	\ ['zshrc', '~/.config/zsh/.zshrc'],
+	\ ['zshenv', '~/.zshenv'],
+	\ ]
+let s:menus.my_commands = {'description': 'Example commands'}
+let s:menus.my_commands.command_candidates = [
+	\ ['Split the window', 'vnew'],
+	\ ['Open zsh menu', 'Denite menu:zsh'],
+	\ ]
+call denite#custom#var('menu', 'menus', s:menus)
+" Ag command on grep source
+call denite#custom#var('grep', 'command', ['ag'])
+call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep'])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', [])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
+" Define alias
+call denite#custom#alias('source', 'file_rec/git', 'file_rec')
+call denite#custom#var('file_rec/git', 'command', ['git', 'ls-files', '-co', '--exclude-standard'])
+" Change default prompt
+call denite#custom#option('default', 'prompt', '>')
+" Change ignore_globs
+call denite#custom#filter('matcher_ignore_globs', 'ignore_globs', [ '.git/', '.ropeproject/', '__pycache__/', 'venv/', 'images/', '*.min.*', 'img/', 'fonts/'])
+" Custom action
+call denite#custom#action('file', 'test', {context -> execute('let g:foo = 1')})
+call denite#custom#action('file', 'test2', {context -> denite#do_action(context, 'open', context['targets'])})
+" }}}
 " {{{ unite-outline
 "--------------------------------------------------------------------------------
-nnoremap [unite]o :<C-u>Unite -vertical -no-quit -no-start-insert -winwidth=40 outline<CR>
+nnoremap [denite]o :<C-u>Unite -vertical -no-quit -no-start-insert -winwidth=40 outline<CR>
 " }}}
 " {{{ unite for junkfile
 "--------------------------------------------------------------------------------
-nnoremap [unite]j   :<C-u>Unite junkfile<CR>
-nnoremap [unite]je  :<C-u>Unite junkfile/new<CR>
+nnoremap [denite]j   :<C-u>Unite junkfile<CR>
+nnoremap [denite]je  :<C-u>Unite junkfile/new<CR>
 " }}}
 " {{{ memolist
 "--------------------------------------------------------------------------------
-let g:memolist_unite = 1
-let g:memolist_unite_source = "file_rec"
-let g:memolist_unite_option = "-auto-preview -start-insert"
+let g:memolist_denite = 1
+let g:memolist_denite_source = "file_rec"
+let g:memolist_denite_option = "-auto-preview"
 let g:memolist_ex_cmd = 'CtrlP'
-nnoremap [unite]mn : MemoNew<CR>
-nnoremap [unite]ml : MemoList<CR>
-nnoremap [unite]mg : MemoGrep<CR>
+nnoremap [denite]mn : MemoNew<CR>
+nnoremap [denite]ml : MemoList<CR>
+nnoremap [denite]mg : MemoGrep<CR>
 " }}}
 " {{{ ctrlp
 "--------------------------------------------------------------------------------
