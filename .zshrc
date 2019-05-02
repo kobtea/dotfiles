@@ -90,10 +90,16 @@ case ${OSTYPE} in
         alias grep='ggrep'
         alias egrep='gegrep'
         alias sed='gsed'
+        alias ls='ls -G'
+        alias ll='ls -laG'
+        ;;
+    linux*)
+        alias ls='ls --color'
+        alias ll='ls -la --color'
+        alias pbcopy='xsel --clipboard --input'
+        alias pbpaste='xsel --clipboard --output'
         ;;
 esac
-alias ls='ls -G'
-alias ll='ls -laG'
 alias g='git'
 alias gs='git status'
 alias gb='git branch'
@@ -106,6 +112,7 @@ alias ce='chef exec'
 alias diff='colordiff -uprN'
 alias tmux='TERM=screen-256color-bce tmux'
 alias emacs='emacs -nw'
+#alias vim='nvim'
 # }}}
 # {{{ Hook Function
 # ------------------------------------------------------------------------------
