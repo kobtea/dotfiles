@@ -32,6 +32,9 @@ define_keymap(lambda wm_class: wm_class in ("Google-chrome", "albert"), {
     K("C-d"): [K("delete"), set_mark(False)],
     # Kill line
     K("C-k"): [K("Shift-end"), K("C-x"), set_mark(False)],
+    # Page
+    K("M-LEFT_BRACE"): K("M-left"),
+    K("M-RIGHT_BRACE"): K("M-right"),
 
     K("M-w"): K("C-w"),
     K("M-r"): K("C-r"),
