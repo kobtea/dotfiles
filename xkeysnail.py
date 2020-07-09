@@ -75,7 +75,7 @@ define_keymap(lambda wm_class: wm_class in ("Gnome-terminal"), {
     K("C-Shift-TAB"): K("C-PAGE_UP"),
 })
 
-define_conditional_modmap(lambda wm_class: wm_class in ("FocusProxy"), {
+define_conditional_modmap(lambda wm_class: wm_class.startswith("jetbrains-"), {
     Key.CAPSLOCK: Key.LEFT_CTRL,
     Key.LEFT_CTRL: Key.CAPSLOCK,
 
@@ -84,6 +84,6 @@ define_conditional_modmap(lambda wm_class: wm_class in ("FocusProxy"), {
     Key.LEFT_META: Key.LEFT_ALT,
 })
 
-define_keymap(lambda wm_class: wm_class in ("FocusProxy"), {
+define_keymap(lambda wm_class: wm_class.startswith("jetbrains-"), {
     K("Super-q"): K("M-q"),
 })
