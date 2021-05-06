@@ -54,8 +54,9 @@ set noundofile                      " undoファイル(`.*.un~`)を作成しな�
 if has("nvim")
     set clipboard+=unnamedplus
 else
-    set clipboard&
-    set clipboard^=unnamedplus      " システムのクリップボードと同期する
+    " set clipboard&
+    " set clipboard^=unnamedplus      " システムのクリップボードと同期する
+    set clipboard=unnamed,autoselect
 endif
 set guioptions+=a                   " 上の`autoselect`のGUI VIM版
 set wildmode=list:full              " 複数のマッチがあるときは、全てのマッチを羅列し、最初のマッチを補完
@@ -101,6 +102,8 @@ Plug 'glidenote/memolist.vim'
 " Plug 'fatih/vim-go'
 Plug '/usr/share/vim/addons/plugin/gtags-cscope.vim'
 Plug '/usr/share/vim/addons/plugin/gtags.vim'
+Plug 'earthly/earthly.vim', { 'branch': 'main' }
+Plug 'google/vim-jsonnet'
 if has("nvim")
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
