@@ -28,6 +28,12 @@ source /usr/local/share/zsh/site-functions/_aws
 # Google Cloud Platform
 source "$HOME/google-cloud-sdk/path.zsh.inc"
 source "$HOME/google-cloud-sdk/completion.zsh.inc"
+
+# k8s
+source <(kubectl --context minikube completion zsh)
+export KUBECTL_EXTERNAL_DIFF="colordiff"
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+compdef k=kubectl
 # }}}
 # {{{ DEBUG: Profile End
 # ------------------------------------------------------------------------------

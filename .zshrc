@@ -115,6 +115,8 @@ alias ce='chef exec'
 alias diff='colordiff -uprN'
 alias tmux='TERM=screen-256color-bce tmux'
 alias emacs='emacs -nw'
+alias k='kubectl'
+alias kx='kubectx'
 #alias vim='nvim'
 # }}}
 # {{{ Hook Function
