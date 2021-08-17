@@ -68,7 +68,7 @@ setopt AUTO_PUSHD # `cd -[TAB]`で移動したことのあるディレクトリ�
 #     RPROMPT="%B[%{[35m%}%~%{[m%}]"
 #     ;;
 # esac
-autoload -U promptinit
+autoload -Uz promptinit
 promptinit
 PURE_PROMPT_SYMBOL='$'
 # }}}
@@ -89,12 +89,15 @@ case ${OSTYPE} in
     darwin*)
         alias vi='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@" -u NONE --noplugin'
         alias vim='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@"'
-        alias view='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/View "$@"'
+        alias view='env LANG=ja_JP.UTF-8 /Applications/MacVim.app/Contents/MacOS/Vim "$@" -R'
         alias grep='ggrep'
         alias egrep='gegrep'
         alias sed='gsed'
-        alias ls='ls -G'
-        alias ll='ls -laG'
+        alias ls='ls --color=auto'
+        alias ll='ls -la --color=auto'
+        alias time='gtime'
+        alias tac='gtac'
+        alias cat='ccat'
         ;;
     linux*)
         alias ls='ls --color'
@@ -117,7 +120,8 @@ alias tmux='TERM=screen-256color-bce tmux'
 alias emacs='emacs -nw'
 alias k='kubectl'
 alias kx='kubectx'
-#alias vim='nvim'
+alias url-encode='nkf -WwMQ | tr = % | tr -d "\n"'
+alias url-decode='nkf -w --url-input'
 # }}}
 # {{{ Hook Function
 # ------------------------------------------------------------------------------
@@ -132,4 +136,8 @@ zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 zplug "zsh-users/zsh-autosuggestions"
 zplug load
 # }}}
+repo() {
+  local dir
+  dir=$(ghq list -p > /dev/null | fzf-tmux --reverse +m) && cd $dir
+}
 source $HOME/dotfiles/.zlogin
