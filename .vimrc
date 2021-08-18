@@ -72,6 +72,13 @@ set expandtab           " タブの代わりに空白文字挿入
 set ts=4 sw=4 sts=0     " タブは半角4文字分のスペース
 inoremap <S-Tab> <C-d>
 " }}}
+" {{{ Neovim terminal
+"--------------------------------------------------------------------------------
+if has("nvim")
+  set sh=zsh
+  tnoremap <silent> <ESC> <C-\><C-n>
+endif
+" }}}
 " {{{ Plugins - Build Functions
 "--------------------------------------------------------------------------------
 function! BuildVimproc(info)
@@ -88,10 +95,11 @@ call plug#begin('~/.vim/plugged')
 Plug 'itchyny/lightline.vim'                                " statusline
 " Plug 'xolox/vim-misc' | Plug 'xolox/vim-notes'              " メモ取り
 Plug 'Shougo/unite.vim'
-Plug 'Shougo/denite.nvim'
+Plug 'roxma/vim-hug-neovim-rpc' | Plug 'roxma/nvim-yarp' | Plug 'Shougo/denite.nvim'
 Plug 'Shougo/neomru.vim'
 Plug 'Shougo/unite-outline'                                 " Unite - outline表示
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'ivalkeen/vim-ctrlp-tjump'
 Plug 'scrooloose/syntastic'                                 " syntax checker
 Plug 'elzr/vim-json'
 Plug 'scrooloose/nerdtree'
@@ -104,13 +112,17 @@ Plug '/usr/share/vim/addons/plugin/gtags-cscope.vim'
 Plug '/usr/share/vim/addons/plugin/gtags.vim'
 Plug 'earthly/earthly.vim', { 'branch': 'main' }
 Plug 'google/vim-jsonnet'
+Plug 'airblade/vim-gitgutter'
+Plug 'itkq/fluentd-vim'
 if has("nvim")
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
 else
     Plug 'Shougo/vimproc.vim', {'do': function('BuildVimproc')}
     Plug 'Shougo/vimshell'
     Plug 'Konfekt/FastFold' | Plug 'Shougo/neocomplete.vim'     " 入力補完
 endif
+Plug 'cespare/vim-toml'
 call plug#end()
 " }}}
 " {{{ lightline
@@ -141,6 +153,7 @@ call unite#custom#profile('default', 'context', {
 \   'smartcase': 1
 \ })
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#sorter_default#use(['sorter_rank'])
 " Using ag as recursive command.
 if executable('ag')
     let g:unite_source_grep_command = 'ag'
@@ -205,7 +218,7 @@ call denite#custom#action('file', 'test2', {context -> denite#do_action(context,
 " }}}
 " {{{ unite-outline
 "--------------------------------------------------------------------------------
-nnoremap [denite]o :<C-u>Unite -vertical -no-quit -no-start-insert -winwidth=40 outline<CR>
+nnoremap [denite]o :<C-u>Unite -vertical -no-quit -no-start-insert -winwidth=60 outline<CR>
 " }}}
 " {{{ unite for junkfile
 "--------------------------------------------------------------------------------
@@ -221,6 +234,7 @@ let g:memolist_ex_cmd = 'CtrlP'
 nnoremap [denite]mn : MemoNew<CR>
 nnoremap [denite]ml : MemoList<CR>
 nnoremap [denite]mg : MemoGrep<CR>
+" MemoGrepの検索結果は`:cwindow`で見れる
 " }}}
 " {{{ ctrlp
 "--------------------------------------------------------------------------------
@@ -234,6 +248,12 @@ let g:ctrlp_prompt_mappings = {
 \   'PrtHistory(-1)':       ['<c-j>'],
 \   'PrtHistory(1)':        ['<c-k>'],
 \   }
+" }}}
+" {{{ ctrlp-tjump
+"--------------------------------------------------------------------------------
+nnoremap <c-]> :CtrlPtjump<cr>
+vnoremap <c-]> :CtrlPtjumpVisual<cr>
+let g:ctrlp_tjump_only_silent = 1
 " }}}
 " {{{ neocomplete
 "--------------------------------------------------------------------------------
@@ -285,6 +305,25 @@ nnoremap [global]] :<C-u>GtagsCursor<CR>
 nnoremap [global]n :<C-u>cn<CR>
 nnoremap [global]p :<C-u>cp<CR>
 " }}}
+" {{{ nerd tree
+"--------------------------------------------------------------------------------
+" Check if NERDTree is open or active
+function! s:isNERDTreeOpen()
+    return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
+
+" Call NERDTreeFind if NERDTree is active, current window contains a modifiable
+" file, and we're not in vimdiff
+function! s:syncTree()
+    if &modifiable && s:isNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+        NERDTreeFind
+        wincmd p
+    endif
+endfunction
+
+"" Highlight currently open buffer in NERDTree
+autocmd BufRead * call s:syncTree()
+" }}}
 " {{{ 言語別 - Python
 "--------------------------------------------------------------------------------
 let g:syntastic_python_checkers = ['flake8']
@@ -292,8 +331,8 @@ autocmd FileType python autocmd BufWritePost <buffer> Errors
 " }}}
 " {{{ 言語別 - Ruby, YAML
 "--------------------------------------------------------------------------------
-let g:syntastic_ruby_checkers = ['rubocop']
-let g:syntastic_ruby_rubocop_args = "--except LineLength"
+" let g:syntastic_ruby_checkers = ['rubocop']
+" let g:syntastic_ruby_rubocop_args = "--except LineLength"
 autocmd BufNewFile,BufRead *.{rb,rake,yaml,yml} set ts=2 sw=2 sts=0
 " }}}
 " {{{ 言語別 - Markdown
