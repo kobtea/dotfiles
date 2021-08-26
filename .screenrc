@@ -1,0 +1,17 @@
+defencoding utf8
+encoding utf8
+escape ^Z^Z
+bind 'k' kill
+
+startup_message off
+vbell off
+defmonitor on
+autodetach on
+defutf8 on
+
+hardstatus alwayslastline "%w"
+
+logfile "$HOME/.screen/screen-%Y%m%d-%n.log"
+shell "/usr/local/bin/zsh"
+
+defscrollback 10000
