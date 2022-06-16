@@ -15,6 +15,8 @@ setopt LIST_PACKED # 補完リストを詰めて表示
 zstyle ':completion:*' list-colors 'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
 # 補完時大文字小文字を区別しない(大文字打ったときは小文字に変換しない)
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+# 補完時aliasを展開する
+zstyle ':completion:*' completer _expand_alias _complete _ignored
 # }}}
 # {{{ History
 # ------------------------------------------------------------------------------
@@ -68,9 +70,13 @@ setopt AUTO_PUSHD # `cd -[TAB]`で移動したことのあるディレクトリ�
 #     RPROMPT="%B[%{[35m%}%~%{[m%}]"
 #     ;;
 # esac
-autoload -Uz promptinit
-promptinit
-PURE_PROMPT_SYMBOL='$'
+## pure prompt
+#autoload -Uz promptinit
+#promptinit
+#PURE_PROMPT_SYMBOL='$'
+## supership prompt
+eval "$(starship init zsh)"
+export STARSHIP_CONFIG=$HOME/dotfiles/starship.toml
 # }}}
 # {{{ Terminal
 # ------------------------------------------------------------------------------
@@ -132,7 +138,7 @@ function chpwd() {ls} # 移動時にls
 source $HOME/.zplug/init.zsh
 zplug "zsh-users/zsh-completions", use:src
 zplug "mafredri/zsh-async", from:github, defer:0
-zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
+#zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 zplug "zsh-users/zsh-autosuggestions"
 zplug load
 # }}}
