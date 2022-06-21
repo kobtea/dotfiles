@@ -7,6 +7,7 @@ $git_state\
 $git_status\
 $gcloud\
 $kubernetes\
+$time\
 $cmd_duration\
 $line_break\
 $python\
@@ -59,3 +60,8 @@ style = "yellow"
 [python]
 format = "[$virtualenv]($style) "
 style = "bright-black"
+
+[time]
+disabled = false
+format = "[🕙 $time]($style) "
+time_format = "%T"
