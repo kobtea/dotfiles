@@ -47,6 +47,9 @@ export PATH=$PATH:$HOME/.cabal/bin
 # Go
 export GOPATH=$HOME/local/go
 export PATH=$PATH:$GOPATH/bin
+
+# Rust
+. "$HOME/.cargo/env"
 # }}}
 # {{{ Middleware support
 # ------------------------------------------------------------------------------

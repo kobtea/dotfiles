@@ -37,3 +37,4 @@ yabai -m config                                 \
 # Unmanaged
 yabai -m rule --add app="システム設定"          manage=off border=off
 yabai -m rule --add app="Spotify"               manage=off border=off
+yabai -m rule --add app="JetBrains Toolbox"     manage=off border=off

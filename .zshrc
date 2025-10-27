@@ -3,7 +3,9 @@ source $HOME/dotfiles/.zprofile
 # ------------------------------------------------------------------------------
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 fi
+FPATH=$HOME/.zfunc:$FPATH
 autoload -Uz compinit
 compinit #-C
 setopt COMPLETE_ALIASES # エイリアスに対しても補完を効かせる
@@ -104,6 +106,7 @@ case ${OSTYPE} in
         alias time='gtime'
         alias tac='gtac'
         alias cat='ccat'
+        alias xargs='gxargs'
         ;;
     linux*)
         alias ls='ls --color'
@@ -140,10 +143,12 @@ zplug "zsh-users/zsh-completions", use:src
 zplug "mafredri/zsh-async", from:github, defer:0
 #zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 zplug "zsh-users/zsh-autosuggestions"
+#zplug "marlonrichert/zsh-autocomplete", from:github
 zplug load
 # }}}
 repo() {
   local dir
   dir=$(ghq list -p > /dev/null | fzf-tmux --reverse +m) && cd $dir
 }
+source $HOME/.docker/init-zsh.sh || true # Added by Docker Desktop
 source $HOME/dotfiles/.zlogin

@@ -4,6 +4,10 @@
 " :copen                => quickfixを開く
 " :cclose               => quickfixを閉じる
 " :map                  => 設定されているmappingを表示する
+"
+" NERDTree
+" i: open like sp
+" s: open like vsp
 " }}}
 
 let mapleader = "\<Space>"
@@ -114,6 +118,8 @@ Plug 'earthly/earthly.vim', { 'branch': 'main' }
 Plug 'google/vim-jsonnet'
 Plug 'airblade/vim-gitgutter'
 Plug 'itkq/fluentd-vim'
+Plug 'lambdalisue/fern.vim'
+Plug 'lambdalisue/fern-git-status.vim'
 if has("nvim")
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
     Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -123,6 +129,7 @@ else
     Plug 'Konfekt/FastFold' | Plug 'Shougo/neocomplete.vim'     " 入力補完
 endif
 Plug 'cespare/vim-toml'
+Plug 'jjo/vim-cue'
 call plug#end()
 " }}}
 " {{{ lightline
