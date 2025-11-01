@@ -11,8 +11,8 @@
 " }}}
 
 let mapleader = "\<Space>"
-let s:dotfiles_dir = $HOME.'/dotfiles/'
-execute 'source' s:dotfiles_dir.'.vimrc.local'
+let s:dotfiles_dir = $HOME
+execute 'source' s:dotfiles_dir.'/.vimrc.local'
 
 " {{{ Encoding
 "--------------------------------------------------------------------------------

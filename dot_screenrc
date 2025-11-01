@@ -12,6 +12,6 @@ defutf8 on
 hardstatus alwayslastline "%w"
 
 logfile "$HOME/.screen/screen-%Y%m%d-%n.log"
-shell "/usr/local/bin/zsh"
+shell "/opt/homebrew/bin/zsh"
 
 defscrollback 10000

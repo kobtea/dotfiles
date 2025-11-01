@@ -1,3 +1,0 @@
-let g:notes_directories = ['/PATH/TO/DIR']
-let g:junkfile#directory = '/PATH/TO/DIR'
-let g:memolist_path = '/PATH/TO/DIR'
