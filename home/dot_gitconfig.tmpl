@@ -1,0 +1,10 @@
+[user]
+    name = {{ .git.userName }}
+    email = {{ .git.userEmail }}
+[ghq]
+    root = {{ .chezmoi.homeDir }}/local/go/src
+    root = {{ .chezmoi.homeDir }}/local/src
+[core]
+    excludesfile = {{ .chezmoi.homeDir }}/.gitignore_global
+[pull]
+    rebase = false
