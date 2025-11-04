@@ -1,4 +1,4 @@
-source $HOME/dotfiles/.zprofile
+source $HOME/.zprofile
 # {{{ Completion
 # ------------------------------------------------------------------------------
 if type brew &>/dev/null; then
@@ -78,7 +78,7 @@ setopt AUTO_PUSHD # `cd -[TAB]`で移動したことのあるディレクトリ�
 #PURE_PROMPT_SYMBOL='$'
 ## supership prompt
 eval "$(starship init zsh)"
-export STARSHIP_CONFIG=$HOME/dotfiles/starship.toml
+export STARSHIP_CONFIG=$HOME/.config/starship.toml
 # }}}
 # {{{ Terminal
 # ------------------------------------------------------------------------------
@@ -151,4 +151,4 @@ repo() {
   dir=$(ghq list -p > /dev/null | fzf-tmux --reverse +m) && cd $dir
 }
 source $HOME/.docker/init-zsh.sh || true # Added by Docker Desktop
-source $HOME/dotfiles/.zlogin
+source $HOME/.zlogin
