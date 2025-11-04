@@ -48,10 +48,13 @@ format = '[$symbol$account(\($project\))]($style) '
 format = '[⛵ $context](dimmed green) '
 disabled = false
 
-[kubernetes.context_aliases]
-"dev.local.cluster.k8s" = "dev"
-".*/openshift-cluster/.*" = "openshift"
-"gke_.*_(?P<var_cluster>[\\w-]+)" = "gke-$var_cluster"
+[[kubernetes.contexts]]
+context_pattern = "dev.local.cluster.k8s"
+context_alias = "dev"
+
+[[kubernetes.contexts]]
+context_pattern = "gke_.*_(?P<cluster>[\\w-]+)"
+context_alias = "gke-$cluster"
 
 [cmd_duration]
 format = "[$duration]($style) "
